@@ -1,6 +1,10 @@
 ﻿#pragma once
 #include "sto_generate_base_tb.h"
 
+#ifndef FAST_IO_ENABLE_NEW
+#define FAST_IO_ENABLE_NEW 1
+#endif
+
 namespace fast_io
 {
 
@@ -547,7 +551,7 @@ runtime_scan_int_contiguous_none_simd_space_part_define_impl(char_type const *fi
 	auto first_phase_last{first + mn_val};
 
 	constexpr bool isebcdic{::fast_io::details::is_ebcdic<char_type>};
-	if constexpr (!isebcdic && (::std::numeric_limits<::std::uint_least64_t>::digits == 64u))
+	if constexpr (!isebcdic && (::std::numeric_limits<::std::uint_least64_t>::digits == 64u) && FAST_IO_ENABLE_NEW)
 	{
 		if constexpr (sizeof(::std::uint_least32_t) < sizeof(::std::size_t))
 		{
