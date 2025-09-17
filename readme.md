@@ -341,6 +341,63 @@ iconv test:
 | iconv command                  |      0.844s             |  GNU iconv. No BOM which sucks                                           |
 | utf8_file_to_utf32_file.cc     |      0.442s             |  I use the SSE algorithms provided by the utf-utils project.                   |
 
+6. Additional Benchmarks
+
+The following results were produced by the newly added benchmarks and reflect a recent run on the author's machine. Absolute values can vary by platform and build settings; the relative ratios are what matter.
+
+format_vs_fmt (benchmark/0019.formatting/format_vs_fmt.cc)
+
+Format construction (Iterations: 10,000,000; Rounds: 5, best time):
+
+| Method       | Total size | Time         | Note                         |
+|--------------|------------|--------------|------------------------------|
+| fast_io      | 930000000  | 0.846346725s |                              |
+| std::format  | 930000000  | 4.75483023s  | fast_io is 5.62x faster      |
+| fmt          | 930000000  | 2.161971199s | fast_io is 2.55x faster      |
+
+Write to /dev/null:
+
+| Method               | Size       | Time         |
+|----------------------|------------|--------------|
+| fast_io obuf(128K)   | 930000000  | 0.909740069s |
+| fast_io native(no)   | 930000000  | 4.117635925s |
+| fmt(FMT_COMPILE)+buf | 930000000  | 2.246105464s |
+| fmt(FMT_COMPILE)+no  | 930000000  | 4.609492319s |
+
+teju_vs_dragonbox (benchmark/0020.teju_vs_dragonbox/teju_vs_dragonbox.cc)
+
+float:
+
+| Method    | Time         |
+|-----------|--------------|
+| fast_io   | 0.020469291s |
+| dragonbox | 0.03668411s  |
+| teju      | 0.036075266s |
+
+double:
+
+| Method    | Time         |
+|-----------|--------------|
+| fast_io   | 0.035350931s |
+| dragonbox | 0.04298322s  |
+| teju      | 0.042940754s |
+
+file_vs_stdio (benchmark/0021.io/file_vs_stdio.cc) — 10,000,000 integers
+
+Write:
+
+| Method  | Time         |
+|---------|--------------|
+| fast_io | 0.053008316s |
+| stdio   | 0.326509159s |
+
+Read:
+
+| Method  | Time         |
+|---------|--------------|
+| fast_io | 0.045539035s |
+| stdio   | 0.436185283s |
+
 ## Credits
 
 The creation and development of this project were made possible thanks to the valuable contributions of various open-source projects. While the code was not copied directly from these projects, I used them as references and re-implemented them to suit the specific purposes of this library. In some cases, integration issues arose that required modifications to the original code. I am grateful to these projects and their developers for their commitment to making their code open and accessible to the wider community.
